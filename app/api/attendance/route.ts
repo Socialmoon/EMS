@@ -2,6 +2,16 @@ import { NextRequest } from "next/server";
 import { adminDb } from "@/lib/firebase-admin/admin";
 import { verifySession, requireRole } from "@/lib/auth/verifySession";
 import { apiError, apiSuccess } from "@/lib/api/response";
+import { z } from "zod";
+
+const ManualAttendanceSchema = z.object({
+  employeeId: z.string().min(1),
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be YYYY-MM-DD"),
+  clockIn: z.string().optional(),
+  clockOut: z.string().optional(),
+  workingHours: z.number().min(0).max(24).optional(),
+  status: z.enum(["present", "absent", "late", "half-day"]).optional(),
+});
 
 // GET /api/attendance?employeeId=&date=&month=
 export async function GET(request: NextRequest) {
@@ -36,9 +46,10 @@ export async function POST(request: NextRequest) {
     if (!adminDb) return apiError("Admin SDK not configured", { status: 503 });
     const caller = await verifySession(request);
     requireRole(caller, "admin", "hr");
-    const body = await request.json();
+    const parsed = ManualAttendanceSchema.safeParse(await request.json());
+    if (!parsed.success) return apiError("Invalid input", { status: 400, details: parsed.error.flatten() });
     const ref = adminDb.collection("attendance").doc();
-    await ref.set({ ...body, enteredBy: caller!.uid, manualEntry: true });
+    await ref.set({ ...parsed.data, enteredBy: caller!.uid, manualEntry: true });
     return apiSuccess({ id: ref.id }, 201);
   } catch (err) {
     if (err instanceof Response) return err;

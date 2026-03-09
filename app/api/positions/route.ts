@@ -4,7 +4,7 @@ import { verifySession, requireRole } from "@/lib/auth/verifySession";
 import { apiError, apiSuccess } from "@/lib/api/response";
 import { z } from "zod";
 
-const Schema = z.object({ title: z.string().min(1), departmentId: z.string().min(1) });
+const Schema = z.object({ title: z.string().min(1), departmentId: z.string().optional(), description: z.string().optional() });
 
 export async function GET(request: NextRequest) {
   try {

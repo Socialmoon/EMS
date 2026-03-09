@@ -1,6 +1,32 @@
-# Employee Management System (EMS)
+<div align="center">
 
-A full-stack Employee Management System built with Next.js and Firebase. Focused on functionality over design — minimal UI, maximum feature coverage.
+<img src="./public/logo.png" alt="SocialMoon Logo" width="180" />
+
+# Employee Management System
+
+**A full-stack EMS built with Next.js 16 & Firebase**
+
+![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)
+![Firebase](https://img.shields.io/badge/Firebase-Admin_SDK-orange?style=flat-square&logo=firebase)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4-38bdf8?style=flat-square&logo=tailwindcss)
+![Status](https://img.shields.io/badge/Status-In_Development-yellow?style=flat-square)
+
+</div>
+
+> **Private Project** — This repository is intended for internal/portfolio use only. Not licensed for redistribution.
+
+---
+
+## Overview
+
+A production-ready Employee Management System covering the full HR lifecycle — from onboarding to payroll. Built with a secure server-side architecture: all data access goes through Next.js API routes protected by Firebase session cookies and server-verified role claims. No direct client-to-Firestore reads.
+
+**Key design decisions:**
+- Role-based access enforced **server-side** via Firebase Custom Claims — not client-only
+- Session cookies (httpOnly, secure) instead of raw ID tokens in localStorage
+- All API inputs validated with Zod schemas — no mass-assignment vulnerabilities
+- HTTP security headers (CSP, X-Frame-Options, etc.) applied globally
 
 ---
 
@@ -8,9 +34,9 @@ A full-stack Employee Management System built with Next.js and Firebase. Focused
 
 | Layer           | Technology                                        |
 |-----------------|---------------------------------------------------|
-| Framework       | Next.js 14 (App Router)                           |
+| Framework       | Next.js 16 (App Router, Turbopack)                |
 | Styling         | TailwindCSS                                       |
-| Auth            | Firebase Authentication + Next.js Middleware      |
+| Auth            | Firebase Authentication + Next.js Proxy (Edge)    |
 | Database        | Cloud Firestore                                   |
 | Server Logic    | Next.js API Routes + Firebase Admin SDK           |
 | File Storage    | Firebase Storage                                  |
@@ -75,7 +101,7 @@ EMS/
 │   ├── firebase/                # Client SDK init (config.ts)
 │   └── firebase-admin/          # Admin SDK init (admin.ts)
 ├── services/                    # Firestore + Storage helpers
-├── middleware.ts                 # Edge middleware — verify Firebase ID token
+├── proxy.ts                     # Edge proxy — session cookie gate for /dashboard
 ├── firestore.rules
 ├── storage.rules
 ├── firebase.json
@@ -165,4 +191,4 @@ firebase emulators:start --only auth,firestore,storage
 
 ## License
 
-MIT
+Private — All rights reserved. No part of this project may be reproduced, distributed, or used without explicit permission from the owner.

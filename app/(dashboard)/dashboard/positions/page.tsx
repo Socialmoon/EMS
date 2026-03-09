@@ -5,7 +5,7 @@ import Modal from "@/components/ui/Modal";
 import Spinner, { PageSpinner } from "@/components/ui/Spinner";
 import Empty from "@/components/ui/Empty";
 
-interface Position { id: string; name: string; departmentId?: string; departmentName?: string; description?: string; }
+interface Position { id: string; title: string; departmentId?: string; description?: string; }
 interface Department { id: string; name: string; }
 
 export default function PositionsPage() {
@@ -14,7 +14,7 @@ export default function PositionsPage() {
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Position | null>(null);
-  const [form, setForm] = useState({ name: "", departmentId: "", description: "" });
+  const [form, setForm] = useState({ title: "", departmentId: "", description: "" });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
@@ -30,11 +30,11 @@ export default function PositionsPage() {
   };
   useEffect(load, []);
 
-  function openCreate() { setEditing(null); setForm({ name: "", departmentId: "", description: "" }); setError(""); setModalOpen(true); }
-  function openEdit(p: Position) { setEditing(p); setForm({ name: p.name, departmentId: p.departmentId || "", description: p.description || "" }); setError(""); setModalOpen(true); }
+  function openCreate() { setEditing(null); setForm({ title: "", departmentId: "", description: "" }); setError(""); setModalOpen(true); }
+  function openEdit(p: Position) { setEditing(p); setForm({ title: p.title, departmentId: p.departmentId || "", description: p.description || "" }); setError(""); setModalOpen(true); }
 
   async function save() {
-    if (!form.name.trim()) { setError("Name is required"); return; }
+    if (!form.title.trim()) { setError("Title is required."); return; }
     setSaving(true); setError("");
     const url = editing ? `/api/positions/${editing.id}` : "/api/positions";
     const method = editing ? "PUT" : "POST";
@@ -80,8 +80,8 @@ export default function PositionsPage() {
             <tbody className="divide-y divide-gray-100">
               {positions.map((p) => (
                 <tr key={p.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 font-medium text-gray-900">{p.name}</td>
-                  <td className="px-4 py-3 text-gray-500">{p.departmentName || "—"}</td>
+                  <td className="px-4 py-3 font-medium text-gray-900">{p.title}</td>
+                  <td className="px-4 py-3 text-gray-500">{departments.find((d) => d.id === p.departmentId)?.name || "—"}</td>
                   <td className="px-4 py-3 text-gray-400 max-w-xs truncate">{p.description || "—"}</td>
                   <td className="px-4 py-3">
                     <div className="flex gap-1">
@@ -101,7 +101,7 @@ export default function PositionsPage() {
           {error && <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg text-sm">{error}</div>}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Title <span className="text-red-500">*</span></label>
-            <input value={form.name} onChange={set("name")} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <input value={form.title} onChange={set("title")} placeholder="e.g. Software Engineer" className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Department</label>

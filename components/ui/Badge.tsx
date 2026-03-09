@@ -28,6 +28,7 @@ export function statusVariant(status: string): string {
     inactive: variantMap.gray, absent: variantMap.red, rejected: variantMap.red, terminated: variantMap.red,
     pending: variantMap.yellow, late: variantMap.yellow, draft: variantMap.yellow, "half-day": variantMap.yellow,
     "in-progress": variantMap.blue,
+    "on-leave": "bg-purple-100 text-purple-700",
   };
   return map[status?.toLowerCase()] ?? variantMap.gray;
 }

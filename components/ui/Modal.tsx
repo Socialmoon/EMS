@@ -29,18 +29,18 @@ export default function Modal({
   const widths = { sm: "max-w-sm", md: "max-w-lg", lg: "max-w-2xl" };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
       <div
         ref={ref}
-        className={`bg-white rounded-lg shadow-xl w-full ${widths[size]} mx-4`}
+        className={`bg-white rounded-lg shadow-xl w-full ${widths[size]} mx-4 flex flex-col max-h-[90vh]`}
       >
-        <div className="flex items-center justify-between px-5 py-4 border-b">
+        <div className="flex items-center justify-between px-5 py-4 border-b shrink-0">
           <h2 className="font-semibold text-gray-900">{title}</h2>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
             <X size={18} />
           </button>
         </div>
-        <div className="p-5">{children}</div>
+        <div className="p-5 overflow-y-auto">{children}</div>
       </div>
     </div>
   );
